@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto11
+    commands:
+      - echo Installing Maven
+      - yum install -y maven
+  build:
+    commands:
+      - echo Build started on `date`
+      - mvn clean package
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - docker build -t <your-dockerhub-username>/insurance-service .
+      - docker login -u <your-dockerhub-username> -p <your-dockerhub-password>
+      - docker push <your-dockerhub-username>/insurance-service:latest
+artifacts:
+  files:
+    - target/*.jar
